@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ -e "Evops_eg1-1--1-1X1.dat" ]
+then
+	res=`ls Evops_* | sed 's/[^X]*X//g; s/.dat//g' | sort -n | tail -n 1`
+	res=$(($res + 1))
+else
+	res=`echo "1"`
+fi
+
+for i in `seq $res 1000`
+do
+	../Release/NOSE-NOVY-montecarlo
+	ls Evops_eg*X.dat | sed "s/\(.*\).dat/mv \1.dat \1$i.dat/g"       	 | bash
+done
