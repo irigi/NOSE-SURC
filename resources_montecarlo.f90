@@ -151,7 +151,8 @@ module resources_montecarlo
 
         STEPS = 2048
         rwa = 0
-        Nl = 2
+
+        Nl = read_Nsys()
 
         allocate(global_lambda(Nl))
         allocate(global_temp(Nl))
@@ -165,22 +166,6 @@ module resources_montecarlo
         global_tau = 0.0
         global_lambda = 0.0
         Ham = 0.0
-
-        !global_en(1) = -400/Energy_internal_to_cm
-        !global_en(2) = 0/Energy_internal_to_cm
-        !J_coupl(1,2) = 300/Energy_internal_to_cm
-        !J_coupl(2,1) = 300/Energy_internal_to_cm
-        !Ham(1,1) = global_en(1)
-        !Ham(2,2) = global_en(2)
-        !Ham(1,2) = J_coupl(1,2)
-        !Ham(2,1) = J_coupl(1,2)
-
-        !global_temp(1) = 300
-        !global_temp(2) = 300
-        !global_lambda(1) = 100/Energy_internal_to_cm
-        !global_lambda(2) = 1000/Energy_internal_to_cm
-        !global_tau(1) = 100
-        !global_tau(2) = 100
 
         call read_config_file(Nl)
 
@@ -1157,6 +1142,38 @@ module resources_montecarlo
 
       stop
     end subroutine random_test
+
+    integer(i4b) function read_Nsys() result(Nsys)
+        character(len=256)           :: buff = ""
+        real(dp)                     :: svalue
+        integer(i4b)                 :: i = 0
+
+        open(unit=32,file=trim(trim(directory)//'/'//trim(config_filename) ) , err=32, status='old')
+
+        Nsys = 0
+
+        do while(i == 0)
+          read(32, *, iostat=i) buff
+
+        !global_en, global_lambda, global_temp, global_tau
+
+          if(trim(adjustl(buff)) == 'systemSize') then
+            read(32, *, iostat=i) svalue
+            write(*,*) buff, int(svalue)
+            Nsys = int(svalue)
+
+          else
+            !write(*,*) 'unrecognised:', buff, value
+          end if
+        end do
+
+        close(32)
+
+        return
+
+32      write(*,*) "couldn't read the supplementary config file"
+        stop
+    end function read_Nsys
 
     subroutine read_config_file(Nsys)
         integer(i4b), intent(in)     :: Nsys
