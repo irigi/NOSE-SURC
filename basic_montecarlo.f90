@@ -1,5 +1,5 @@
 
-module resources_montecarlo
+module basic_montecarlo
     use std_types
     use helpers
     use nakajima_zwanzig_shared
@@ -1239,5 +1239,5 @@ module resources_montecarlo
         stop
     end subroutine read_config_file
 
-end module resources_montecarlo
+end module basic_montecarlo
 

@@ -1,5 +1,5 @@
 program montecarlo
-  use resources_montecarlo
+  use basic_montecarlo
   use std_types
   use helpers
 
