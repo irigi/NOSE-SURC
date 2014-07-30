@@ -404,7 +404,7 @@ module exciton_montecarlo
 
                     ! hV, Vh between bra and ket brackets of the same i (4 h-terms, 2 V-terms => 8 pairs)
                         ! ket_i == V(ket_i_,ket_i)
-                        additive_factor = additive_factor + (Vh_general(ket_i_,ket_i,   ket_i,time_i,time_i))
+                        additive_factor = additive_factor - (Vh_general(ket_i_,ket_i,   ket_i,time_i,time_i))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
@@ -423,7 +423,7 @@ module exciton_montecarlo
                             !end if
 
                         ! bra_i_ == V(ket_i_,ket_i)
-                        additive_factor = additive_factor + (Vh_general(ket_i_,ket_i,   bra_i_,time_i,time_i))
+                        additive_factor = additive_factor - (Vh_general(ket_i_,ket_i,   bra_i_,time_i,time_i))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
@@ -435,13 +435,13 @@ module exciton_montecarlo
                             !end if
 
                         ! bra_i_ == V(bra_i,bra_i_)
-                        additive_factor = additive_factor + (Vh_general(bra_i,bra_i_,   bra_i_,time_i,time_i))
+                        additive_factor = additive_factor - (Vh_general(bra_i,bra_i_,   bra_i_,time_i,time_i))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
 
                         ! ket_i == V(bra_i,bra_i_)
-                        additive_factor = additive_factor + (hV_general(ket_i,   bra_i,bra_i_,time_i,time_i))
+                        additive_factor = additive_factor - (hV_general(ket_i,   bra_i,bra_i_,time_i,time_i))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
@@ -602,7 +602,7 @@ module exciton_montecarlo
 
                     ! hV, Vh between bra and ket brackets of the same i (8 h-terms, 4 V-terms, 8 x 4 - 2*8 => 16 pairs)
                         ! ket_i == V(ket_j_,ket_j)
-                        additive_factor = additive_factor + (Vh_general(ket_j_,ket_j,   ket_i,time_j,time_i))
+                        additive_factor = additive_factor - (Vh_general(ket_j_,ket_j,   ket_i,time_j,time_i))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
@@ -614,7 +614,7 @@ module exciton_montecarlo
                             !end if
 
                         ! ket_j == V(ket_i_,ket_i)
-                        additive_factor = additive_factor + (hV_general(ket_j,   ket_i_,ket_i,time_j,time_i))
+                        additive_factor = additive_factor - (hV_general(ket_j,   ket_i_,ket_i,time_j,time_i))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
@@ -633,7 +633,7 @@ module exciton_montecarlo
                             !end if
 
                         ! bra_j_ == V(ket_i_,ket_i)
-                        additive_factor = additive_factor + (Vh_general(ket_i_,ket_i,   bra_j_,time_i,time_j))
+                        additive_factor = additive_factor - (Vh_general(ket_i_,ket_i,   bra_j_,time_i,time_j))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
@@ -645,13 +645,13 @@ module exciton_montecarlo
                             !end if
 
                         ! bra_j_ == V(bra_i,bra_i_)
-                        additive_factor = additive_factor + (Vh_general(bra_i,bra_i_,   bra_j_,time_i,time_j))
+                        additive_factor = additive_factor - (Vh_general(bra_i,bra_i_,   bra_j_,time_i,time_j))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
 
                         ! ket_j == V(bra_i,bra_i_)
-                        additive_factor = additive_factor + (hV_general(ket_j,   bra_i,bra_i_,time_j,time_i))
+                        additive_factor = additive_factor - (hV_general(ket_j,   bra_i,bra_i_,time_j,time_i))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
@@ -669,7 +669,7 @@ module exciton_montecarlo
                             !end if
 
                         ! bra_i_ == V(ket_j_,ket_j)
-                        additive_factor = additive_factor + (Vh_general(ket_j_,ket_j,   bra_i_,time_j,time_i))
+                        additive_factor = additive_factor - (Vh_general(ket_j_,ket_j,   bra_i_,time_j,time_i))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
@@ -681,13 +681,13 @@ module exciton_montecarlo
                             !end if
 
                         ! bra_i_ == V(bra_j,bra_j_)
-                        additive_factor = additive_factor + (hV_general(bra_i_,   bra_j,bra_j_,time_i,time_j))
+                        additive_factor = additive_factor - (hV_general(bra_i_,   bra_j,bra_j_,time_i,time_j))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
 
                         ! ket_i == V(bra_j,bra_j_)
-                        additive_factor = additive_factor + (hV_general(ket_i,   bra_j,bra_j_,time_i,time_j))
+                        additive_factor = additive_factor - (hV_general(ket_i,   bra_j,bra_j_,time_i,time_j))
                             !if(debug_G) then
                             !    write(*,*) 'factor_H5', real(additive_factor), k, i, time, time_i, last_round_i, ket_i, ket_i
                             !end if
