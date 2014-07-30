@@ -2,8 +2,8 @@
 module basic_montecarlo
     use std_types
     use helpers
-    use nakajima_zwanzig_shared
     use module_goft
+    use nakajima_zwanzig_shared
 
     implicit none
 
@@ -13,9 +13,9 @@ module basic_montecarlo
     real(dp), dimension(:), allocatable    :: global_lambda, global_temp, global_tau
     real(dp), dimension(:,:), allocatable  :: Ham
     real(dp)                               :: rwa
-    logical ::  origin = .false., g_functions = .true.,                                        &
+    logical, private ::  origin = .false., g_functions = .true.,                               &
                                        modified_unraveling2 = .false.,                         &
-                                       vynechani_G_ifu = .false., use_exciton_basis = .false.
+                                       vynechani_G_ifu = .false., use_exciton_basis = .true.
 
     character(len=64), parameter :: external_dir = "external", config_filename = "config.prm", directory = "."
 
@@ -43,6 +43,25 @@ module basic_montecarlo
         module procedure jump_probability_total_
         module procedure jump_probability_total_IJ
     end interface
+
+
+    private::perform_montecarlo_parallel
+    private::perform_montecarlo
+    private::generate_trajectory_re
+    private::generate_trajectory_cmplx
+    private::calculate_Ifactor_from_trajectory_history
+    private::calculate_Gfactor_from_trajectory_history
+    private::get_coherent_dynamics
+    private::random_test
+
+    public::init_monte_carlo
+    public::clean_montecarlo
+    public::open_files
+    public::close_files
+    public::read_config_file
+    public::write_evolution_operators
+    public::next_step_of_trajectory
+
 
     contains
 

@@ -1,5 +1,6 @@
 program montecarlo
   use basic_montecarlo
+  use exciton_montecarlo
   use std_types
   use helpers
 

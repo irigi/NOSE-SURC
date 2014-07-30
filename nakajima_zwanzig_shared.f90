@@ -47,7 +47,7 @@ module nakajima_zwanzig_shared
     real(dp), dimension(:), pointer, private :: eng,en2
 
     integer(i4b), private :: N_of_sites
-    real(dp), dimension(:,:), allocatable, private :: SS, S1, SS_2, S1_2, He
+    real(dp), dimension(:,:), allocatable :: SS, S1, SS_2, S1_2, He
 
 
     contains

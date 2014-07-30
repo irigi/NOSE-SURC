@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 F90_SRCS += \
 ../basic_montecarlo.f90 \
+../exciton_montecarlo.f90 \
 ../helpers.f90 \
 ../module_goft.f90 \
 ../montecarlo.f90 \
@@ -17,6 +18,7 @@ F90_SRCS += \
 
 OBJS += \
 ./basic_montecarlo.o \
+./exciton_montecarlo.o \
 ./helpers.o \
 ./module_goft.o \
 ./montecarlo.o \
@@ -38,11 +40,13 @@ OBJS += \
 
 basic_montecarlo.o: ../basic_montecarlo.f90 helpers.o module_goft.o nakajima_zwanzig_shared.o std_types.o
 
+exciton_montecarlo.o: ../exciton_montecarlo.f90 basic_montecarlo.o helpers.o module_goft.o nakajima_zwanzig_shared.o std_types.o
+
 helpers.o: ../helpers.f90 std_types.o
 
 module_goft.o: ../module_goft.f90 helpers.o nakajima_zwanzig_shared.o std_types.o
 
-montecarlo.o: ../montecarlo.f90 basic_montecarlo.o helpers.o std_types.o
+montecarlo.o: ../montecarlo.f90 basic_montecarlo.o exciton_montecarlo.o helpers.o std_types.o
 
 nakajima_zwanzig_shared.o: ../nakajima_zwanzig_shared.f90 helpers.o numer_fft.o numer_matrix.o std_lapack.o std_types.o
 
