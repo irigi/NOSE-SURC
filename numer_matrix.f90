@@ -73,24 +73,24 @@ module numer_matrix
         module procedure trace_distance_cmplx
     end interface
 
-    !interface svd
-    !    module procedure svd_real
-    !    module procedure svd_cmplx
-    !end interface
+    interface svd
+        module procedure svd_real
+        module procedure svd_cmplx
+    end interface
 
-    public :: spec, spec2, inv, matrix_power, matrix_exp, trace_distance!, svd
+    public :: spec, spec2, inv, matrix_power, matrix_exp, trace_distance, svd
 
     private :: eigsrt, eigconvention, iminloc
     private :: inv_real, inv_cmplx, spec_real, spec_cmplx, spec2_real, spec2_cmplx
     private :: eigsrt_real, eigsrt_cmplx, eigconvention_real, eigconvention_cmplx
     private :: matrix_power_real, matrix_power_real2, matrix_power_real3
     private :: matrix_power_cmplx, matrix_power_cmplx2, matrix_power_cmplx3
-    private :: matrix_exp_real !, matrix_exp_real2, matrix_exp_real3
-    private :: matrix_exp_cmplx !, matrix_exp_cmplx2, matrix_exp_cmplx3
+    private :: matrix_exp_real
+    private :: matrix_exp_cmplx
     private :: spec_generalized_real, spec_generalized_cmplx, eigsrt_real_mat, eigsrt_cmplx_mat
     private :: entropy_real, entropy_cmplx
-    private:: trace_distance_real, trace_distance_cmplx
-    !private:: svd_real, svd_cmplx
+    private :: trace_distance_real, trace_distance_cmplx
+    private :: svd_real, svd_cmplx
 
 
 contains
@@ -801,4 +801,105 @@ contains
 
   end function trace_distance_cmplx
 
+  subroutine svd_real(A,U,EIGVAL,VT)
+    real(dp), dimension(:,:), intent(in) :: A
+    real(dp), dimension(size(A,1),size(A,1)), intent(out) :: U
+    real(dp), dimension(size(A,2),size(A,2)), intent(out) :: VT
+    real(dp), dimension(min(size(A,1),size(A,2))), intent(out) :: EIGVAL
+
+
+    integer(i4b)  :: INFO, M, N, LDA, LDU, LDVT, LWORK, i,j
+    real(dp), dimension(max(size(A,1),size(A,2)),size(A,2)) :: AA
+
+    real(dp), dimension(10) :: SMALLWORK
+    real(dp), dimension(:), allocatable :: WORK
+    !real(dp), dimension(size(A,1),size(A,2)) :: BB, CC
+
+
+    M = size(A,1)
+    N = size(A,2)
+    LDA = max(size(A,1),size(A,2))
+    LDU = M
+    LDVT = N
+    LWORK = -1
+
+    write(*,*) m,n,lda,ldu,ldvt,lwork
+
+    ! make run to get the best LWORK
+    CALL DGESVD( 'A', 'A', M, N, AA, LDA, EIGVAL, U, LDU, VT, &
+                         LDVT, SMALLWORK, LWORK, INFO )
+
+    LWORK = min(SMALLWORK(1)+0.5, 1000000.0_dp)
+
+    !write(*,*) m,n,lda,ldu,ldvt,lwork
+
+    AA = 0.0_dp
+    do i=1,M
+    do j=1,N
+      AA(i,j) = A(i,j)
+    end do
+    end do
+
+    allocate(WORK(LWORK))
+    CALL DGESVD( 'A', 'A', M, N, AA, LDA, EIGVAL, U, LDU, VT, &
+                         LDVT, WORK, LWORK, INFO )
+
+
+    deallocate(WORK)
+
+    if(INFO /= 0) then
+        write(*,*) 'there is some problem in SVD_REAL, INFO = ', INFO
+    end if
+  end subroutine svd_real
+
+  subroutine svd_cmplx(A,U,EIGVAL,VT)
+    complex(dp), dimension(:,:), intent(in) :: A
+    complex(dp), dimension(size(A,1),size(A,1)), intent(out) :: U
+    complex(dp), dimension(size(A,2),size(A,2)), intent(out) :: VT
+    complex(dp), dimension(min(size(A,1),size(A,2))), intent(out) :: EIGVAL
+
+
+    integer(i4b)  :: INFO, M, N, LDA, LDU, LDVT, LWORK, i,j
+    real(dp), dimension(max(size(A,1),size(A,2)),size(A,2)) :: AA
+
+    real(dp), dimension(10) :: SMALLWORK
+    real(dp), dimension(:), allocatable :: WORK
+    !real(dp), dimension(size(A,1),size(A,2)) :: BB, CC
+
+
+    M = size(A,1)
+    N = size(A,2)
+    LDA = max(size(A,1),size(A,2))
+    LDU = M
+    LDVT = N
+    LWORK = -1
+
+    write(*,*) m,n,lda,ldu,ldvt,lwork
+
+    ! make run to get the best LWORK
+    CALL ZGESVD( 'A', 'A', M, N, AA, LDA, EIGVAL, U, LDU, VT, &
+                         LDVT, SMALLWORK, LWORK, INFO )
+
+    LWORK = min(SMALLWORK(1)+0.5, 1000000.0_dp)
+
+    !write(*,*) m,n,lda,ldu,ldvt,lwork
+
+    AA = 0.0_dp
+    do i=1,M
+    do j=1,N
+      AA(i,j) = A(i,j)
+    end do
+    end do
+
+    allocate(WORK(LWORK))
+    CALL ZGESVD( 'A', 'A', M, N, AA, LDA, EIGVAL, U, LDU, VT, &
+                         LDVT, WORK, LWORK, INFO )
+
+
+    deallocate(WORK)
+
+    if(INFO /= 0) then
+        write(*,*) 'there is some problem in SVD_REAL, INFO = ', INFO
+    end if
+  end subroutine svd_cmplx
 end module numer_matrix
