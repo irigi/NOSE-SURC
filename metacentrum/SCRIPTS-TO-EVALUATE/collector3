@@ -1,0 +1,25 @@
+#!/bin/bash
+
+for j in `seq 1 2`
+do
+for i in `seq 1 2`
+do
+	./put-data-together `ls monte*/Evop*$i-1--$j-1*dat`
+	mv E_result.dat Evops_eg$i-1--$j-1.dat
+
+	./put-data-together `ls monte*[01]/Evop*$i-1--$j-1*dat monte*[01]-/Evop*$i-1--$j-1*dat`
+	mv E_result.dat Evops_eg$i-1--$j-1-Y1.dat
+
+	./put-data-together `ls monte*[23]/Evop*$i-1--$j-1*dat monte*[23]-/Evop*$i-1--$j-1*dat`
+	mv E_result.dat Evops_eg$i-1--$j-1-Y2.dat
+
+	./put-data-together `ls monte*[45]/Evop*$i-1--$j-1*dat monte*[45]-/Evop*$i-1--$j-1*dat`
+	mv E_result.dat Evops_eg$i-1--$j-1-Y3.dat
+
+	./put-data-together `ls monte*[67]/Evop*$i-1--$j-1*dat monte*[67]-/Evop*$i-1--$j-1*dat`
+	mv E_result.dat Evops_eg$i-1--$j-1-Y4.dat
+
+	./put-data-together `ls monte*[89]/Evop*$i-1--$j-1*dat monte*[89]-/Evop*$i-1--$j-1*dat`
+	mv E_result.dat Evops_eg$i-1--$j-1-Y5.dat
+done
+done

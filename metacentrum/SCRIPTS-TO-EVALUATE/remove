@@ -1,0 +1,8 @@
+#!/bin/bash
+
+for i in `ls -d monte*`
+do
+  cd $i
+  rm Release/*o Release/*mod
+  cd ..
+done
