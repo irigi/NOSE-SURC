@@ -853,17 +853,18 @@ contains
   end subroutine svd_real
 
   subroutine svd_cmplx(A,U,EIGVAL,VT)
-    complex(dp), dimension(:,:), intent(in) :: A
-    complex(dp), dimension(size(A,1),size(A,1)), intent(out) :: U
-    complex(dp), dimension(size(A,2),size(A,2)), intent(out) :: VT
-    complex(dp), dimension(min(size(A,1),size(A,2))), intent(out) :: EIGVAL
+    complex(dpc), dimension(:,:), intent(in) :: A
+    complex(dpc), dimension(size(A,1),size(A,1)), intent(out) :: U
+    complex(dpc), dimension(size(A,2),size(A,2)), intent(out) :: VT
+    real(dp), dimension(min(size(A,1),size(A,2))), intent(out) :: EIGVAL
 
 
     integer(i4b)  :: INFO, M, N, LDA, LDU, LDVT, LWORK, i,j
-    real(dp), dimension(max(size(A,1),size(A,2)),size(A,2)) :: AA
+    complex(dpc), dimension(max(size(A,1),size(A,2)),size(A,2)) :: AA
 
-    real(dp), dimension(10) :: SMALLWORK
-    real(dp), dimension(:), allocatable :: WORK
+    complex(dpc), dimension(10) :: SMALLWORK
+    complex(dpc), dimension(:), allocatable :: WORK
+    real(dp), dimension(:), allocatable :: RWORK
     !real(dp), dimension(size(A,1),size(A,2)) :: BB, CC
 
 
@@ -878,9 +879,9 @@ contains
 
     ! make run to get the best LWORK
     CALL ZGESVD( 'A', 'A', M, N, AA, LDA, EIGVAL, U, LDU, VT, &
-                         LDVT, SMALLWORK, LWORK, INFO )
+                         LDVT, SMALLWORK, LWORK, RWORK, INFO )
 
-    LWORK = min(SMALLWORK(1)+0.5, 1000000.0_dp)
+    LWORK = min(abs(SMALLWORK(1))+0.5, 1000000.0_dp)
 
     !write(*,*) m,n,lda,ldu,ldvt,lwork
 
@@ -891,12 +892,19 @@ contains
     end do
     end do
 
+    write(*,*) 'allocating', LWORK
+
     allocate(WORK(LWORK))
+    allocate(RWORK(5*min(size(A,1),size(A,2))))
     CALL ZGESVD( 'A', 'A', M, N, AA, LDA, EIGVAL, U, LDU, VT, &
-                         LDVT, WORK, LWORK, INFO )
+                         LDVT, WORK, LWORK, RWORK, INFO )
+
+!ZGESVD( JOBU, JOBVT, M, N, A, LDA, S, U, LDU, VT, LDVT, WORK, LWORK, RWORK, INFO )
+!DGESVD( JOBU, JOBVT, M, N, A, LDA, S, U, LDU, VT, LDVT, WORK, LWORK, INFO )
 
 
     deallocate(WORK)
+    deallocate(RWORK)
 
     if(INFO /= 0) then
         write(*,*) 'there is some problem in SVD_REAL, INFO = ', INFO

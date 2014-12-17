@@ -14,6 +14,8 @@ module exciton_montecarlo
                                        modified_unraveling2 = .false.,                         &
                                        vynechani_G_ifu = .false.
 
+    real(dp), private, parameter :: jump_strength = 100
+
     interface goft_general
         module procedure goft_general_2
         module procedure goft_general_4
@@ -41,6 +43,21 @@ module exciton_montecarlo
         end if
 
         call init_monte_carlo()
+        call init_goft_general()
+
+        ! Hamiltonian stored in Ham is replaced by excitonic Hamiltonian.
+        ! Off-diagonal element
+        do r = 1, Nl
+        do s = 1, Nl
+          if(r == s) then
+            Ham(r,s) = He(r,s)
+          else
+            do k = 1, Nl
+                Ham(r,s) = jump_strength/Energy_internal_to_cm
+            end do
+          end if
+        end do
+        end do
 
         allocate(rho(Nl,Nl,STEPS))
         allocate(rho_coherent(Nl,Nl,STEPS))
@@ -118,8 +135,6 @@ module exciton_montecarlo
         character(len=256) :: buff
         integer(i4b) :: i
 
-        !call omp_set_num_threads(2)
-
         write(buff,'(f12.3)') jump_probability_total()*timeStep
         buff = 'Averagely ' // trim(buff) // ' jumps in one run'
         call print_log_message(trim(buff),5)
@@ -127,7 +142,6 @@ module exciton_montecarlo
         rho = 0.0_dp
         rho_coherent = 0.0_dp
 
-        ! $ OMP PARALLEL DO DEFAULT(FIRSTPRIVATE) PRIVATE(i, rho_local, rho_coherent_local) REDUCTION(+:rho,rho_coherent)
         do i=1,360
           call perform_montecarlo_exciton(i0, j0, rho_local, rho_coherent_local, TRAJECTORIES/360)
 
@@ -177,7 +191,7 @@ module exciton_montecarlo
                 call calculate_Gfactor_from_trajectory_history_general_basis(draha,cmplx(1,0,dp),Gfactor)
             end if
 
-            !call calculate_Ifactor_from_trajectory_history(draha,cmplx(1,0,dp),Ifactor)
+            call calculate_Ifactor_from_trajectory_history(draha,cmplx(1,0,dp),Ifactor)
             !Ifactor = Ifactor/Ifactor(1)    ! coherent at the restart point
             !Ifactor(1:STEPS*(run-1)) = 0.0_dp             ! zero before it
 
@@ -768,18 +782,25 @@ module exciton_montecarlo
         integer(i4b)                :: t_index
         real(dp)                    :: t
 
-        t = t1 - t2
+        if((m == n) .or. (i == j)) then
+            ! we consider only off-diagonal elements of V-operators on VV diagrams
+            res = 0.0_dp
+        else
+            t = t1 - t2
 
-        if(t < 0) then
-            res = conjg(VV_general(i,j,m,n,t2,t1))
-            return
+            if(t < 0) then
+                res = conjg(VV_general(i,j,m,n,t2,t1))
+                return
+            end if
+
+            t_index = INT(t/timeStep)+1
+
+            !!! what about terms ii-jj, are they in this term too, or are they in g-fctions of excitons?
+
+            res = cc_MC(m,n,i,j,t_index)
+            res = res / (jump_strength/Energy_internal_to_cm)
+            res = res / (jump_strength/Energy_internal_to_cm)
         end if
-
-        t_index = INT(t/timeStep)+1
-
-        !!! what about terms ii-jj, are they in this term too, or are they in g-fctions of excitons?
-
-        res = cc_MC(m,n,i,j,t_index)
 
     end function VV_general
 
@@ -882,9 +903,13 @@ module exciton_montecarlo
         integer(i4b), intent(in)    :: m,n,i
         complex(dpc)                :: res
 
-        res = 0.0_dp
-
-        res = goft_general(i,i,m,n,th) - dgoft_general(i,i,m,n,-tV) + dgoft_general(i,i,m,n,th-tV)
+        if(m == n) then
+            ! if there is no Vmn for m == n, these are covered by hh- and g- terms
+            res = 0.0_dp
+        else
+            res = goft_general(i,i,m,n,th) - dgoft_general(i,i,m,n,-tV) + dgoft_general(i,i,m,n,th-tV)
+            res = res / (jump_strength/Energy_internal_to_cm)
+        end if
 
     end function hV_general
 
@@ -893,9 +918,13 @@ module exciton_montecarlo
         integer(i4b), intent(in)    :: m,n,i
         complex(dpc)                :: res
 
-        res = 0.0_dp
-
-        res = dgoft_general(m,n,i,i,tV) + goft_general(m,n,i,i,-th) - dgoft_general(m,n,i,i,tV-th)
+        if(m == n) then
+            ! if there is no Vmn for m == n, these are covered by hh- and g- terms
+            res = 0.0_dp
+        else
+            res = dgoft_general(m,n,i,i,tV) + goft_general(m,n,i,i,-th) - dgoft_general(m,n,i,i,tV-th)
+            res = res / (jump_strength/Energy_internal_to_cm)
+        end if
 
     end function Vh_general
 
@@ -909,8 +938,6 @@ module exciton_montecarlo
 
     subroutine init_goft_general()
         integer(i4b) :: i,j,k,l,r,s,t_index
-
-        call init_nakajima_zwanzig_shared (Ham)
 
         allocate(gg_MC(Nl, Nl, Nl, Nl, size(goft,2)) )
         allocate(hh_MC(Nl, Nl, Nl, Nl, size(goft,2)) )

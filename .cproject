@@ -100,8 +100,20 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="NOSE-NOVY-montecarlo.photran.managedbuild.target.gnu.fortran.exe.1714242236" name="Executable (Gnu Fortran on Linux/*nix)" projectType="photran.managedbuild.target.gnu.fortran.exe"/>
 	</storageModule>
+	<storageModule moduleId="refreshScope"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="photran.managedbuild.config.gnu.fortran.exe.release.1727851606;photran.managedbuild.config.gnu.fortran.exe.release.1727851606.">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="photran.managedbuild.config.gnu.fortran.exe.debug.46937683;photran.managedbuild.config.gnu.fortran.exe.debug.46937683.;photran.managedbuild.tool.gnu.c.compiler.exe.debug.445408189;cdt.managedbuild.tool.gnu.c.compiler.input.664664906">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="photran.managedbuild.config.gnu.fortran.exe.release.1727851606;photran.managedbuild.config.gnu.fortran.exe.release.1727851606.;photran.managedbuild.tool.gnu.c.compiler.exe.release.119640166;cdt.managedbuild.tool.gnu.c.compiler.input.1624605387">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="photran.managedbuild.config.gnu.fortran.exe.debug.46937683;photran.managedbuild.config.gnu.fortran.exe.debug.46937683.">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile"/>
+		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
 </cproject>

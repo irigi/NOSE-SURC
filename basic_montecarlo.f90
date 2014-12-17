@@ -49,7 +49,6 @@ module basic_montecarlo
     private::perform_montecarlo
     private::generate_trajectory_re
     private::generate_trajectory_cmplx
-    private::calculate_Ifactor_from_trajectory_history
     private::calculate_Gfactor_from_trajectory_history
     private::get_coherent_dynamics
     private::random_test
@@ -61,6 +60,7 @@ module basic_montecarlo
     public::read_config_file
     public::write_evolution_operators
     public::next_step_of_trajectory
+    public::calculate_Ifactor_from_trajectory_history
 
 
     contains
@@ -234,8 +234,6 @@ module basic_montecarlo
         character(len=256) :: buff
         integer(i4b) :: i
 
-        !call omp_set_num_threads(2)
-
         write(buff,'(f12.3)') jump_probability_total()*timeStep
         buff = 'Averagely ' // trim(buff) // ' jumps in one run'
         call print_log_message(trim(buff),5)
@@ -243,7 +241,6 @@ module basic_montecarlo
         rho = 0.0_dp
         rho_coherent = 0.0_dp
 
-        ! $ OMP PARALLEL DO DEFAULT(FIRSTPRIVATE) PRIVATE(i, rho_local, rho_coherent_local) REDUCTION(+:rho,rho_coherent)
         do i=1,360
           call perform_montecarlo(i0, j0, rho_local, rho_coherent_local, TRAJECTORIES/360)
 
