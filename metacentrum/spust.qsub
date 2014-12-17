@@ -1,0 +1,41 @@
+#!/bin/sh
+#PBS -N SURC-1
+#PBS -q backfill
+#PBS -l mem=200mb
+#PBS -l scratch=1gb
+#PBS -l nodes=1:ppn=1:nfs4:x86_64:linux
+#PBS -m e
+#PBS -j oe
+#PBS -l walltime=40000
+  
+hostname
+echo $SCRATCHDIR
+
+DATADIR="/storage/praha1/home/irigi/DATA-test1"
+
+trap "rm -r $SCRATCHDIR" TERM EXIT
+
+cd $DATADIR
+
+pwd 
+
+cp -r $DATADIR/montecarlo1 $SCRATCHDIR  || exit 1
+cd $SCRATCHDIR || exit 2
+ 
+module ad gcc-4.8.1
+
+cd montecarlo1
+
+cd Release
+rm *mod *o
+make all
+cd ..
+
+Release/NOSE-NOVY-montecarlo
+
+cp -rf * $DATADIR/montecarlo1 || {  trap - TERM EXIT && echo "Copy output data failed. Copy them manualy from `hostname`" >&2 ; exit 1 ;}
+
+ls
+rm -r *
+
+ls

@@ -1,0 +1,16 @@
+jumps 
+24
+
+lambda                      
+100 1000
+
+tauC                        
+100 100
+
+temperature
+100 100
+
+hamiltonian
+-400   300
+ 300     0
+

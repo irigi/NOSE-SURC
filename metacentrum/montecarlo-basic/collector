@@ -1,0 +1,10 @@
+#!/bin/bash
+
+for j in `seq 1 2`
+do
+for i in `seq 1 2`
+do
+	./put-data-together `ls [0-9]/Evop*$i-1--$j-1*dat`
+	mv E_result.dat Evops_eg$i-1--$j-1.dat
+done
+done

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd Release
+rm *mod *o
+make all
+cd ..
+
+for i in `seq 1 8`
+do
+	cp config.prm $i
+	cd $i
+	../blade_runner >a 2>b &
+	cd ..
+done

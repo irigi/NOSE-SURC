@@ -1,0 +1,10 @@
+#!/bin/bash
+
+rm -rf ~/montecarlo-*/.git
+rm -rf ~/montecarlo-*/Debug
+
+for i in `seq 1 100`
+do
+  cp -r ../montecarlo-basic montecarlo$i
+  cat ../spust.qsub | sed "s/montecarlo1/montecarlo$i/g; s/SURC-1/SURCtest1-$i/g" > spust$i.qsub
+done
